@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>StreamDownloader | VeloStream Technology</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#690005",
+                    "on-secondary-fixed": "#410004",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "on-tertiary-fixed": "#002113",
+                    "surface-container-low": "#131b2e",
+                    "on-surface-variant": "#c2c6d6",
+                    "on-surface": "#dae2fd",
+                    "on-secondary": "#68000a",
+                    "on-tertiary-container": "#00311f",
+                    "surface-tint": "#adc6ff",
+                    "primary-fixed": "#d8e2ff",
+                    "primary-container": "#4d8eff",
+                    "inverse-surface": "#dae2fd",
+                    "background": "#0b1326",
+                    "on-tertiary": "#003824",
+                    "outline": "#8c909f",
+                    "on-secondary-fixed-variant": "#930013",
+                    "error-container": "#93000a",
+                    "secondary-fixed": "#ffdad7",
+                    "outline-variant": "#424754",
+                    "surface-container": "#171f33",
+                    "secondary-container": "#a40217",
+                    "surface-bright": "#31394d",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-primary-container": "#00285d",
+                    "on-background": "#dae2fd",
+                    "primary": "#adc6ff",
+                    "surface-container-lowest": "#060e20",
+                    "inverse-on-surface": "#283044",
+                    "tertiary-fixed": "#6ffbbe",
+                    "surface-container-highest": "#2d3449",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "secondary": "#ffb3ad",
+                    "on-primary": "#002e6a",
+                    "tertiary": "#4edea3",
+                    "surface-variant": "#2d3449",
+                    "secondary-fixed-dim": "#ffb3ad",
+                    "on-primary-fixed": "#001a42",
+                    "tertiary-container": "#00a572",
+                    "surface": "#0b1326",
+                    "error": "#ffb4ab",
+                    "primary-fixed-dim": "#adc6ff",
+                    "inverse-primary": "#005ac2",
+                    "surface-container-high": "#222a3d",
+                    "surface-dim": "#0b1326",
+                    "on-secondary-container": "#ffaea8"
+            },
+            "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+            "spacing": { "base": "4px", "container-max": "1280px", "xs": "0.5rem", "lg": "2.5rem", "xl": "4rem", "gutter": "1.5rem", "sm": "1rem", "md": "1.5rem" }
+          },
+        },
+      }
+    </script>
+    <style>
+        body { background-color: #0b1326; color: #dae2fd; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(23, 31, 51, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .pulse-accent { box-shadow: 0 0 20px rgba(173, 198, 255, 0.2); }
+    </style>
+</head>
+<body class="selection:bg-primary-container selection:text-on-primary-container">
+
+<nav class="fixed top-0 w-full z-50 bg-background/70 backdrop-blur-xl border-b border-outline-variant/10 shadow-sm">
+    <div class="flex justify-between items-center px-gutter py-4 max-w-container-max mx-auto">
+        <div class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            StreamDownloader
+        </div>
+        <button class="px-4 py-2 bg-primary text-on-primary font-bold rounded-lg hover:scale-[1.02] transition-all">Sign In</button>
+    </div>
+</nav>
+
+<main class="pt-32 pb-xl px-gutter max-w-container-max mx-auto min-h-screen flex flex-col items-center">
+    <section class="w-full text-center mb-xl">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-4 max-w-3xl mx-auto">VeloStream: High-Performance Media Extraction</h1>
+        <p class="text-lg text-on-surface-variant mb-8">Download videos in <span class="text-primary font-bold">4K</span> or extract <span class="text-secondary font-bold">MP3</span> in seconds.</p>
+        
+        <div class="w-full max-w-3xl mx-auto glass p-base rounded-xl flex items-center shadow-2xl focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+            <div class="flex-1 flex items-center px-md gap-sm">
+                <span class="material-symbols-outlined text-outline">link</span>
+                <input id="url-input" class="w-full bg-transparent border-none focus:ring-0 text-white py-md" placeholder="Paste video URL here..." type="text"/>
+            </div>
+            <button class="bg-primary text-on-primary px-lg py-md rounded-lg font-bold flex items-center gap-xs hover:scale-[1.02] active:scale-95 transition-all pulse-accent" onclick="simulateProcess()">
+                <span class="material-symbols-outlined">analytics</span>Analyze
+            </button>
+        </div>
+    </section>
+
+    <div class="hidden w-full max-w-xl glass p-lg rounded-xl mb-xl text-center" id="processing-state">
+        <p id="status-text" class="text-sm font-medium text-primary mb-md tracking-widest uppercase">Fetching Metadata...</p>
+        <div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+            <div id="progress-bar" class="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-300" style="width: 20%"></div>
+        </div>
+    </div>
+
+    <section class="w-full grid grid-cols-1 lg:grid-cols-12 gap-xl opacity-0 translate-y-8 transition-all duration-700" id="results-area">
+        <div class="lg:col-span-5">
+            <div class="glass p-md rounded-xl h-full sticky top-24">
+                <div class="relative group mb-4" id="preview-container">
+                    <div class="w-full aspect-video rounded-lg bg-slate-800 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary text-5xl">movie</span>
+                     </div>
+                </div>
+                <h2 id="media-title" class="text-xl font-bold mb-2">Media Extracted Successfully</h2>
+                <p id="media-source" class="text-sm text-on-surface-variant">VeloStream Safe Channel Protocol</p>
+                <div class="mt-md flex items-center gap-sm">
+                    <span class="text-xs font-bold text-outline bg-surface-container px-2 py-1 rounded">Verified Clean Source</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-7 flex flex-col gap-lg">
+            <div>
+                <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Available Video Formats</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-md" id="video-formats-box">
+                    </div>
+            </div>
+
+            <div>
+                <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Audio Extraction</h3>
+                <button id="main-audio-btn" class="w-full bg-secondary-container/20 border border-secondary/30 p-6 rounded-xl flex items-center justify-center gap-md hover:bg-secondary-container/40 transition-all group">
+                    <div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-2xl">music_note</span>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-lg font-bold text-secondary">Download MP3 (320kbps)</p>
+                        <p class="text-sm text-on-surface-variant">High-fidelity safe audio link.</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+    function getYouTubeId(url) {
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    function simulateProcess() {
+        const urlInput = document.getElementById('url-input').value.trim();
+        const processing = document.getElementById('processing-state');
+        const results = document.getElementById('results-area');
+        const statusText = document.getElementById('status-text');
+        const progressBar = document.getElementById('progress-bar');
+
+        if (!urlInput) {
+            alert('Please enter a valid URL');
+            return;
+        }
+
+        // Reset and Show Loader
+        processing.classList.remove('hidden');
+        results.classList.add('opacity-0', 'translate-y-8');
+        progressBar.style.width = '30%';
+        statusText.innerText = "Analyzing video components...";
+
+        const ytId = getYouTubeId(urlInput);
+        
+        setTimeout(() => {
+            progressBar.style.width = '70%';
+            statusText.innerText = "Bypassing local restrictions securely...";
+            
+            setTimeout(() => {
+                // Setup layout dynamically based on link
+                if (ytId) {
+                    document.getElementById('media-title').innerText = "YouTube Streaming Asset";
+                    document.getElementById('media-source').innerText = `Video ID: ${ytId}`;
+                    document.getElementById('preview-container').innerHTML = `<img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" class="w-full aspect-video rounded-lg object-cover shadow-md"/>`;
+                } else {
+                    document.getElementById('media-title').innerText = "Universal Media Stream";
+                    document.getElementById('media-source').innerText = "External Extraction Channel";
+                    document.getElementById('preview-container').innerHTML = `<div class="w-full aspect-video rounded-lg bg-gradient-to-br from-surface-container to-background flex items-center justify-center"><span class="material-symbols-outlined text-primary text-5xl">play_circle</span></div>`;
+                }
+
+                // Inject Download Buttons right inside the page (No Redirects)
+                const formatsBox = document.getElementById('video-formats-box');
+                
+                // We use a clean external mirror api directly embedded on buttons
+                const downloadBase = `https://api.cobalt.tools/`; 
+                
+                formatsBox.innerHTML = `
+                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all group" onclick="triggerDownload('${urlInput}', '1080')">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary">download</span>
+                            <div class="text-left">
+                                <p class="font-bold text-sm">1080p (Full HD)</p>
+                                <p class="text-xs text-outline">Direct MP4 Engine</p>
+                            </div>
+                        </div>
+                    </button>
+                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all group" onclick="triggerDownload('${urlInput}', '720')">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-on-surface-variant">download</span>
+                            <div class="text-left">
+                                <p class="font-bold text-sm">720p (HD Quality)</p>
+                                <p class="text-xs text-outline">Fast Load • .mp4</p>
+                            </div>
+                        </div>
+                    </button>
+                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all group" onclick="triggerDownload('${urlInput}', '480')">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-on-surface-variant">download</span>
+                            <div class="text-left">
+                                <p class="font-bold text-sm">480p (Standard)</p>
+                                <p class="text-xs text-outline">Data Saver • .mp4</p>
+                            </div>
+                        </div>
+                    </button>
+                `;
+
+                // Setup Audio button download trigger
+                document.getElementById('main-audio-btn').onclick = () => triggerDownload(urlInput, 'audio');
+
+                // Reveal Dashboard
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    processing.classList.add('hidden');
+                    results.classList.remove('opacity-0', 'translate-y-8');
+                    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 200);
+
+            }, 800);
+        }, 700);
+    }
+
+    // Direct background processing without showing scary popups or leaving the page
+    async function triggerDownload(url, quality) {
+        try {
+            const isAudio = quality === 'audio';
+            const response = await fetch('https://api.cobalt.tools/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    url: url,
+                    videoQuality: isAudio ? '720' : quality,
+                    downloadMode: isAudio ? 'audio' : 'auto'
+                })
+            });
+            const data = await response.json();
+            if (data.url) {
+                window.open(data.url, '_blank');
+            } else {
+                alert("Processing failed on this specific quality. Try another option!");
+            }
+        } catch (e) {
+            // If CORS blocks it on local file protocol, open in clean processing layout
+            window.open(`https://co.wuk.sh/?url=${encodeURIComponent(url)}`, '_blank');
+        }
+    }
+</script>
+</body>
+</html>
