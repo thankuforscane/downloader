@@ -89,12 +89,12 @@
             </div>
         </div>
 
-        <!-- Right Column: Dashboard Action Grid -->
+        <!-- Right Column: Formats Grid -->
         <div class="lg:col-span-7 flex flex-col gap-lg">
             <div>
                 <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Available Video Formats</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-md" id="video-formats-box">
-                    <!-- Dynamic Buttons -->
+                    <!-- Dynamic Download Buttons -->
                 </div>
             </div>
 
@@ -106,7 +106,7 @@
                     </div>
                     <div class="text-left">
                         <p class="text-lg font-bold text-secondary">Download MP3 (320kbps)</p>
-                        <p class="text-sm text-on-surface-variant">High-fidelity secure audio track.</p>
+                        <p class="text-sm text-on-surface-variant">High-fidelity direct audio track.</p>
                     </div>
                 </button>
             </div>
@@ -132,14 +132,14 @@
 
         processing.classList.remove('hidden');
         results.classList.add('opacity-0', 'translate-y-8');
-        progressBar.style.width = '30%';
+        progressBar.style.width = '40%';
         statusText.innerText = "Analyzing video stream parameters...";
 
         const ytId = getYouTubeId(urlInput);
         
         setTimeout(() => {
-            progressBar.style.width = '70%';
-            statusText.innerText = "Synchronizing global proxy networks...";
+            progressBar.style.width = '80%';
+            statusText.innerText = "Generating direct download paths...";
             
             setTimeout(() => {
                 if (ytId) {
@@ -153,37 +153,39 @@
                 }
 
                 const formatsBox = document.getElementById('video-formats-box');
+                
+                // Direct high-speed download engine injection
                 formatsBox.innerHTML = `
-                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="triggerDownload('${urlInput}', '1080')">
+                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="directDownload('${urlInput}', '1080')">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary">download</span>
                             <div class="text-left">
                                 <p class="font-bold text-sm">1080p (Full HD)</p>
-                                <p class="text-xs text-outline">Direct MP4 Engine</p>
+                                <p class="text-xs text-outline">Direct MP4 Download</p>
                             </div>
                         </div>
                     </button>
-                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="triggerDownload('${urlInput}', '720')">
+                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="directDownload('${urlInput}', '720')">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-on-surface-variant">download</span>
                             <div class="text-left">
                                 <p class="font-bold text-sm">720p (HD Quality)</p>
-                                <p class="text-xs text-outline">Fast Load • .mp4</p>
+                                <p class="text-xs text-outline">Direct MP4 Download</p>
                             </div>
                         </div>
                     </button>
-                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="triggerDownload('${urlInput}', '480')">
+                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="directDownload('${urlInput}', '480')">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-on-surface-variant">download</span>
                             <div class="text-left">
                                 <p class="font-bold text-sm">480p (Standard)</p>
-                                <p class="text-xs text-outline">Data Saver • .mp4</p>
+                                <p class="text-xs text-outline">Direct MP4 Download</p>
                             </div>
                         </div>
                     </button>
                 `;
 
-                document.getElementById('main-audio-btn').onclick = () => triggerDownload(urlInput, 'audio');
+                document.getElementById('main-audio-btn').onclick = () => directDownload(urlInput, 'mp3');
 
                 progressBar.style.width = '100%';
                 setTimeout(() => {
@@ -196,47 +198,27 @@
         }, 500);
     }
 
-    // Absolutely NO Alert Popups inside this extraction layer
-    async function triggerDownload(url, quality) {
-        const isAudio = quality === 'audio';
-        
-        const apiNodes = [
-            'https://api.cobalt.tools/',
-            'https://cobalt.api.v0.ru/',
-            'https://cobalt-api.kwiatuszek.xyz/',
-            'https://cobalt.api.b69.ch/'
-        ];
+    // 100% No Redirect System
+    function directDownload(url, type) {
+        // Cleaning the input url
+        const cleanUrl = encodeURIComponent(url);
+        let downloadUrl = "";
 
-        for (let i = 0; i < apiNodes.length; i++) {
-            try {
-                const response = await fetch(apiNodes[i], {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({
-                        url: url,
-                        videoQuality: isAudio ? '720' : quality,
-                        downloadMode: isAudio ? 'audio' : 'auto',
-                        audioFormat: 'mp3'
-                    })
-                });
-
-                if (!response.ok) continue;
-                const data = await response.json();
-
-                if (data.url) {
-                    window.open(data.url, '_blank');
-                    return; 
-                } else if (data.picker && data.picker.length > 0) {
-                    window.open(data.picker[0].url, '_blank');
-                    return;
-                }
-            } catch (e) {
-                console.log("Shifting node channels silently...");
-            }
+        if (type === 'mp3') {
+            // High speed direct MP3 extraction tunnel
+            downloadUrl = `https://api.vexdwn.com/download?url=${cleanUrl}&type=mp3`;
+        } else {
+            // High speed direct MP4 video extraction tunnel
+            downloadUrl = `https://api.vexdwn.com/download?url=${cleanUrl}&type=mp4&quality=${type}`;
         }
-
-        // Silent Fallback Portal - Fires instantly if all backend nodes are overloaded
-        window.open(`https://co.wuk.sh/?url=${encodeURIComponent(url)}`, '_blank');
+        
+        // Triggers the browser download manager instantly without shifting tabs/pages
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
     }
 </script>
 </body>
