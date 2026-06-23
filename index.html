@@ -13,65 +13,30 @@
         theme: {
           extend: {
             "colors": {
-                    "on-error": "#690005",
-                    "on-secondary-fixed": "#410004",
-                    "on-error-container": "#ffdad6",
-                    "tertiary-fixed-dim": "#4edea3",
-                    "on-tertiary-fixed": "#002113",
-                    "surface-container-low": "#131b2e",
+                    "background": "#0b1326",
+                    "primary": "#adc6ff",
+                    "secondary": "#ffb3ad",
+                    "surface-container": "#171f33",
                     "on-surface-variant": "#c2c6d6",
                     "on-surface": "#dae2fd",
-                    "on-secondary": "#68000a",
-                    "on-tertiary-container": "#00311f",
-                    "surface-tint": "#adc6ff",
-                    "primary-fixed": "#d8e2ff",
                     "primary-container": "#4d8eff",
-                    "inverse-surface": "#dae2fd",
-                    "background": "#0b1326",
-                    "on-tertiary": "#003824",
-                    "outline": "#8c909f",
-                    "on-secondary-fixed-variant": "#930013",
-                    "error-container": "#93000a",
-                    "secondary-fixed": "#ffdad7",
-                    "outline-variant": "#424754",
-                    "surface-container": "#171f33",
-                    "secondary-container": "#a40217",
-                    "surface-bright": "#31394d",
-                    "on-primary-fixed-variant": "#004395",
-                    "on-primary-container": "#00285d",
-                    "on-background": "#dae2fd",
-                    "primary": "#adc6ff",
-                    "surface-container-lowest": "#060e20",
-                    "inverse-on-surface": "#283044",
-                    "tertiary-fixed": "#6ffbbe",
-                    "surface-container-highest": "#2d3449",
-                    "on-tertiary-fixed-variant": "#005236",
-                    "secondary": "#ffb3ad",
                     "on-primary": "#002e6a",
-                    "tertiary": "#4edea3",
-                    "surface-variant": "#2d3449",
-                    "secondary-fixed-dim": "#ffb3ad",
-                    "on-primary-fixed": "#001a42",
-                    "tertiary-container": "#00a572",
-                    "surface": "#0b1326",
-                    "error": "#ffb4ab",
-                    "primary-fixed-dim": "#adc6ff",
-                    "inverse-primary": "#005ac2",
-                    "surface-container-high": "#222a3d",
-                    "surface-dim": "#0b1326",
-                    "on-secondary-container": "#ffaea8"
+                    "outline-variant": "#424754",
+                    "outline": "#8c909f",
+                    "secondary-container": "#a40217",
+                    "on-secondary": "#68000a",
+                    "tertiary": "#4edea3"
             },
-            "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
-            "spacing": { "base": "4px", "container-max": "1280px", "xs": "0.5rem", "lg": "2.5rem", "xl": "4rem", "gutter": "1.5rem", "sm": "1rem", "md": "1.5rem" }
-          },
-        },
+            "borderRadius": { "xl": "0.75rem", "lg": "0.5rem" },
+            "spacing": { "base": "4px", "container-max": "1280px", "gutter": "1.5rem", "sm": "1rem", "md": "1.5rem", "lg": "2.5rem", "xl": "4rem" }
+          }
+        }
       }
     </script>
     <style>
         body { background-color: #0b1326; color: #dae2fd; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .glass { background: rgba(23, 31, 51, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .pulse-accent { box-shadow: 0 0 20px rgba(173, 198, 255, 0.2); }
     </style>
 </head>
 <body class="selection:bg-primary-container selection:text-on-primary-container">
@@ -81,7 +46,7 @@
         <div class="font-bold text-2xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             StreamDownloader
         </div>
-        <button class="px-4 py-2 bg-primary text-on-primary font-bold rounded-lg hover:scale-[1.02] transition-all">Sign In</button>
+        <button class="px-4 py-2 bg-primary text-on-primary font-bold rounded-lg">Sign In</button>
     </div>
 </nav>
 
@@ -95,13 +60,13 @@
                 <span class="material-symbols-outlined text-outline">link</span>
                 <input id="url-input" class="w-full bg-transparent border-none focus:ring-0 text-white py-md" placeholder="Paste video URL here..." type="text"/>
             </div>
-            <button class="bg-primary text-on-primary px-lg py-md rounded-lg font-bold flex items-center gap-xs hover:scale-[1.02] active:scale-95 transition-all pulse-accent" onclick="simulateProcess()">
+            <button class="bg-primary text-on-primary px-lg py-md rounded-lg font-bold flex items-center gap-xs hover:scale-[1.02] active:scale-95 transition-all" onclick="simulateProcess()">
                 <span class="material-symbols-outlined">analytics</span>Analyze
             </button>
         </div>
     </section>
 
-    <!-- Progress State -->
+    <!-- Progress Loader -->
     <div class="hidden w-full max-w-xl glass p-lg rounded-xl mb-xl text-center" id="processing-state">
         <p id="status-text" class="text-sm font-medium text-primary mb-md tracking-widest uppercase">Fetching Metadata...</p>
         <div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
@@ -111,7 +76,7 @@
 
     <!-- Results Area -->
     <section class="w-full grid grid-cols-1 lg:grid-cols-12 gap-xl opacity-0 translate-y-8 transition-all duration-700" id="results-area">
-        <!-- Left Column: Preview -->
+        <!-- Left Column: Thumbnail -->
         <div class="lg:col-span-5">
             <div class="glass p-md rounded-xl h-full sticky top-24">
                 <div class="relative group mb-4" id="preview-container">
@@ -121,30 +86,27 @@
                 </div>
                 <h2 id="media-title" class="text-xl font-bold mb-2">Media Extracted Successfully</h2>
                 <p id="media-source" class="text-sm text-on-surface-variant">VeloStream Safe Channel Protocol</p>
-                <div class="mt-md flex items-center gap-sm">
-                    <span class="text-xs font-bold text-outline bg-surface-container px-2 py-1 rounded">Verified Clean Source</span>
-                </div>
             </div>
         </div>
 
-        <!-- Right Column: Formats Panel -->
+        <!-- Right Column: Dashboard Action Grid -->
         <div class="lg:col-span-7 flex flex-col gap-lg">
             <div>
                 <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Available Video Formats</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-md" id="video-formats-box">
-                    <!-- Formats dynamically injected here -->
+                    <!-- Dynamic Buttons -->
                 </div>
             </div>
 
             <div>
                 <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Audio Extraction</h3>
                 <button id="main-audio-btn" class="w-full bg-secondary-container/20 border border-secondary/30 p-6 rounded-xl flex items-center justify-center gap-md hover:bg-secondary-container/40 transition-all group">
-                    <div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                    <div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center shadow-lg transition-transform">
                         <span class="material-symbols-outlined text-2xl">music_note</span>
                     </div>
                     <div class="text-left">
                         <p class="text-lg font-bold text-secondary">Download MP3 (320kbps)</p>
-                        <p class="text-sm text-on-surface-variant">High-fidelity safe audio link.</p>
+                        <p class="text-sm text-on-surface-variant">High-fidelity secure audio track.</p>
                     </div>
                 </button>
             </div>
@@ -166,21 +128,18 @@
         const statusText = document.getElementById('status-text');
         const progressBar = document.getElementById('progress-bar');
 
-        if (!urlInput) {
-            alert('Please enter a valid URL');
-            return;
-        }
+        if (!urlInput) return;
 
         processing.classList.remove('hidden');
         results.classList.add('opacity-0', 'translate-y-8');
         progressBar.style.width = '30%';
-        statusText.innerText = "Analyzing video components...";
+        statusText.innerText = "Analyzing video stream parameters...";
 
         const ytId = getYouTubeId(urlInput);
         
         setTimeout(() => {
             progressBar.style.width = '70%';
-            statusText.innerText = "Configuring pipeline nodes...";
+            statusText.innerText = "Synchronizing global proxy networks...";
             
             setTimeout(() => {
                 if (ytId) {
@@ -195,7 +154,7 @@
 
                 const formatsBox = document.getElementById('video-formats-box');
                 formatsBox.innerHTML = `
-                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all group" onclick="triggerDownload('${urlInput}', '1080')">
+                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="triggerDownload('${urlInput}', '1080')">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary">download</span>
                             <div class="text-left">
@@ -204,7 +163,7 @@
                             </div>
                         </div>
                     </button>
-                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all group" onclick="triggerDownload('${urlInput}', '720')">
+                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="triggerDownload('${urlInput}', '720')">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-on-surface-variant">download</span>
                             <div class="text-left">
@@ -213,7 +172,7 @@
                             </div>
                         </div>
                     </button>
-                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all group" onclick="triggerDownload('${urlInput}', '480')">
+                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="triggerDownload('${urlInput}', '480')">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-on-surface-variant">download</span>
                             <div class="text-left">
@@ -233,15 +192,14 @@
                     results.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 200);
 
-            }, 800);
-        }, 700);
+            }, 600);
+        }, 500);
     }
 
-    // New Bulletproof Loop Extraction Logic (Multi-Mirror Network)
+    // Absolutely NO Alert Popups inside this extraction layer
     async function triggerDownload(url, quality) {
         const isAudio = quality === 'audio';
         
-        // List of Active Cobalt API Nodes
         const apiNodes = [
             'https://api.cobalt.tools/',
             'https://cobalt.api.v0.ru/',
@@ -249,7 +207,6 @@
             'https://cobalt.api.b69.ch/'
         ];
 
-        // Loop through all nodes silently until one successfully serves the download file
         for (let i = 0; i < apiNodes.length; i++) {
             try {
                 const response = await fetch(apiNodes[i], {
@@ -268,18 +225,17 @@
 
                 if (data.url) {
                     window.open(data.url, '_blank');
-                    return; // Extraction successful, exit function cleanly
+                    return; 
                 } else if (data.picker && data.picker.length > 0) {
                     window.open(data.picker[0].url, '_blank');
                     return;
                 }
             } catch (e) {
-                console.warn(`Node ${apiNodes[i]} rate-limited or busy, shifting channels...`);
+                console.log("Shifting node channels silently...");
             }
         }
 
-        // Ultimate Failure Safe Tunnel (No Error Popups Ever)
-        // If all direct backend API instances are blocked, route seamlessly into the absolute web-core client
+        // Silent Fallback Portal - Fires instantly if all backend nodes are overloaded
         window.open(`https://co.wuk.sh/?url=${encodeURIComponent(url)}`, '_blank');
     }
 </script>
