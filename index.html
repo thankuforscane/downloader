@@ -149,38 +149,37 @@
 
                 const formatsBox = document.getElementById('video-formats-box');
                 
-                // Pure On-Page Client Trigger Downloader
                 formatsBox.innerHTML = `
-                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="instantDownload('${urlInput}', '1080')">
+                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="forceDownload('${urlInput}', '1080')">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary">download</span>
                             <div class="text-left">
                                 <p class="font-bold text-sm">1080p (Full HD)</p>
-                                <p class="text-xs text-outline">Direct MP4 Engine</p>
+                                <p class="text-xs text-outline">Forced MP4 Download</p>
                             </div>
                         </div>
                     </button>
-                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="instantDownload('${urlInput}', '720')">
+                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="forceDownload('${urlInput}', '720')">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-on-surface-variant">download</span>
                             <div class="text-left">
                                 <p class="font-bold text-sm">720p (HD Quality)</p>
-                                <p class="text-xs text-outline">Direct MP4 Engine</p>
+                                <p class="text-xs text-outline">Forced MP4 Download</p>
                             </div>
                         </div>
                     </button>
-                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="instantDownload('${urlInput}', '360')">
+                    <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all" onclick="forceDownload('${urlInput}', '480')">
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-on-surface-variant">download</span>
                             <div class="text-left">
-                                <p class="font-bold text-sm">360p (Standard)</p>
-                                <p class="text-xs text-outline">Direct MP4 Engine</p>
+                                <p class="font-bold text-sm">480p (Standard)</p>
+                                <p class="text-xs text-outline">Forced MP4 Download</p>
                             </div>
                         </div>
                     </button>
                 `;
 
-                document.getElementById('main-audio-btn').onclick = () => instantDownload(urlInput, 'mp3');
+                document.getElementById('main-audio-btn').onclick = () => forceDownload(urlInput, 'mp3');
 
                 progressBar.style.width = '100%';
                 setTimeout(() => {
@@ -193,27 +192,19 @@
         }, 500);
     }
 
-    // 100% No Extra Tabs, No Ad Links, Instant File Streaming
-    function instantDownload(url, type) {
-        let finalStreamUrl = "";
+    // New Absolute Force Download Method
+    function forceDownload(url, type) {
         const cleanUrl = encodeURIComponent(url);
+        let finalLink = "";
 
         if (type === 'mp3') {
-            // Direct MP3 server stream node
-            finalStreamUrl = `https://loader.to/api/button/?url=${cleanUrl}&f=mp3`;
-            window.location.href = finalStreamUrl;
+            finalLink = `https://api.vexdwn.com/download?url=${cleanUrl}&type=mp3`;
         } else {
-            // Direct MP4 video server stream node
-            finalStreamUrl = `https://loader.to/api/button/?url=${cleanUrl}&f=${type}`;
-            
-            // Seamless background download simulation
-            const dlAnchor = document.createElement('a');
-            dlAnchor.href = finalStreamUrl;
-            dlAnchor.setAttribute('download', 'video.mp4');
-            document.body.appendChild(dlAnchor);
-            dlAnchor.click();
-            document.body.removeChild(dlAnchor);
+            finalLink = `https://api.vexdwn.com/download?url=${cleanUrl}&type=mp4&quality=${type}`;
         }
+        
+        // Changing current window location to trigger browser attachment download rule
+        window.location.assign(finalLink);
     }
 </script>
 </body>
