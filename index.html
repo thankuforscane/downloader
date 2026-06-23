@@ -101,6 +101,7 @@
         </div>
     </section>
 
+    <!-- Progress State -->
     <div class="hidden w-full max-w-xl glass p-lg rounded-xl mb-xl text-center" id="processing-state">
         <p id="status-text" class="text-sm font-medium text-primary mb-md tracking-widest uppercase">Fetching Metadata...</p>
         <div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
@@ -108,11 +109,13 @@
         </div>
     </div>
 
+    <!-- Results Area -->
     <section class="w-full grid grid-cols-1 lg:grid-cols-12 gap-xl opacity-0 translate-y-8 transition-all duration-700" id="results-area">
+        <!-- Left Column: Preview -->
         <div class="lg:col-span-5">
             <div class="glass p-md rounded-xl h-full sticky top-24">
                 <div class="relative group mb-4" id="preview-container">
-                    <div class="w-full aspect-video rounded-lg bg-slate-800 flex items-center justify-center">
+                     <div class="w-full aspect-video rounded-lg bg-slate-800 flex items-center justify-center">
                         <span class="material-symbols-outlined text-primary text-5xl">movie</span>
                      </div>
                 </div>
@@ -124,11 +127,13 @@
             </div>
         </div>
 
+        <!-- Right Column: Formats Panel -->
         <div class="lg:col-span-7 flex flex-col gap-lg">
             <div>
                 <h3 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Available Video Formats</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-md" id="video-formats-box">
-                    </div>
+                    <!-- Formats dynamically injected here -->
+                </div>
             </div>
 
             <div>
@@ -166,7 +171,6 @@
             return;
         }
 
-        // Reset and Show Loader
         processing.classList.remove('hidden');
         results.classList.add('opacity-0', 'translate-y-8');
         progressBar.style.width = '30%';
@@ -176,10 +180,9 @@
         
         setTimeout(() => {
             progressBar.style.width = '70%';
-            statusText.innerText = "Bypassing local restrictions securely...";
+            statusText.innerText = "Configuring pipeline nodes...";
             
             setTimeout(() => {
-                // Setup layout dynamically based on link
                 if (ytId) {
                     document.getElementById('media-title').innerText = "YouTube Streaming Asset";
                     document.getElementById('media-source').innerText = `Video ID: ${ytId}`;
@@ -190,12 +193,7 @@
                     document.getElementById('preview-container').innerHTML = `<div class="w-full aspect-video rounded-lg bg-gradient-to-br from-surface-container to-background flex items-center justify-center"><span class="material-symbols-outlined text-primary text-5xl">play_circle</span></div>`;
                 }
 
-                // Inject Download Buttons right inside the page (No Redirects)
                 const formatsBox = document.getElementById('video-formats-box');
-                
-                // We use a clean external mirror api directly embedded on buttons
-                const downloadBase = `https://api.cobalt.tools/`; 
-                
                 formatsBox.innerHTML = `
                     <button class="glass p-4 rounded-lg flex items-center justify-between hover:bg-surface-container transition-all group" onclick="triggerDownload('${urlInput}', '1080')">
                         <div class="flex items-center gap-3">
@@ -226,10 +224,8 @@
                     </button>
                 `;
 
-                // Setup Audio button download trigger
                 document.getElementById('main-audio-btn').onclick = () => triggerDownload(urlInput, 'audio');
 
-                // Reveal Dashboard
                 progressBar.style.width = '100%';
                 setTimeout(() => {
                     processing.classList.add('hidden');
@@ -241,29 +237,50 @@
         }, 700);
     }
 
-    // Direct background processing without showing scary popups or leaving the page
+    // New Bulletproof Loop Extraction Logic (Multi-Mirror Network)
     async function triggerDownload(url, quality) {
-        try {
-            const isAudio = quality === 'audio';
-            const response = await fetch('https://api.cobalt.tools/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify({
-                    url: url,
-                    videoQuality: isAudio ? '720' : quality,
-                    downloadMode: isAudio ? 'audio' : 'auto'
-                })
-            });
-            const data = await response.json();
-            if (data.url) {
-                window.open(data.url, '_blank');
-            } else {
-                alert("Processing failed on this specific quality. Try another option!");
+        const isAudio = quality === 'audio';
+        
+        // List of Active Cobalt API Nodes
+        const apiNodes = [
+            'https://api.cobalt.tools/',
+            'https://cobalt.api.v0.ru/',
+            'https://cobalt-api.kwiatuszek.xyz/',
+            'https://cobalt.api.b69.ch/'
+        ];
+
+        // Loop through all nodes silently until one successfully serves the download file
+        for (let i = 0; i < apiNodes.length; i++) {
+            try {
+                const response = await fetch(apiNodes[i], {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({
+                        url: url,
+                        videoQuality: isAudio ? '720' : quality,
+                        downloadMode: isAudio ? 'audio' : 'auto',
+                        audioFormat: 'mp3'
+                    })
+                });
+
+                if (!response.ok) continue;
+                const data = await response.json();
+
+                if (data.url) {
+                    window.open(data.url, '_blank');
+                    return; // Extraction successful, exit function cleanly
+                } else if (data.picker && data.picker.length > 0) {
+                    window.open(data.picker[0].url, '_blank');
+                    return;
+                }
+            } catch (e) {
+                console.warn(`Node ${apiNodes[i]} rate-limited or busy, shifting channels...`);
             }
-        } catch (e) {
-            // If CORS blocks it on local file protocol, open in clean processing layout
-            window.open(`https://co.wuk.sh/?url=${encodeURIComponent(url)}`, '_blank');
         }
+
+        // Ultimate Failure Safe Tunnel (No Error Popups Ever)
+        // If all direct backend API instances are blocked, route seamlessly into the absolute web-core client
+        window.open(`https://co.wuk.sh/?url=${encodeURIComponent(url)}`, '_blank');
     }
 </script>
 </body>
